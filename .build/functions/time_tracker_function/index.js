@@ -2,6 +2,7 @@
 
 const express = require('express');
 const catalyst = require('zcatalyst-sdk-node');
+const userRoute = require('./routes/user')
 const app = express();
 
 app.use(express.json());
@@ -22,6 +23,7 @@ app.get('/get', (req, res) => {
     });
 });
 
+app.use('/user',userRoute);
 // Fetch all time entries for a given employee
 app.get('/allTimeEntry', (req, res) => {
     const emp = req.query.empName;
