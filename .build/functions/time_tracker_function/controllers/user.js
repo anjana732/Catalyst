@@ -1,10 +1,10 @@
 const catalyst = require('zcatalyst-sdk-node');
-
+const {sendErrorResponse} = require('../utils/error')
 async function handleUserSignup(req, res) {
-        const {userName ,email, password} =  req.body
+    const {userName ,email, password} =  req.body
 
     const catalystApp = catalyst.initialize(req);
-    addUser(catalystApp, {userName,email,password})
+    await addUser(catalystApp, {userName,email,password})
         .then(resp => {
             console.log("Data Inserted Successfully:", resp);
             res.send({
@@ -14,21 +14,20 @@ async function handleUserSignup(req, res) {
         })
         .catch(err => {
             console.error(err);
-            sendErrorResponse(res);
-        });
-        
+             sendErrorResponse(res);
+        });    
 }
 
 function addUser(catalystApp, {userName,email, password}) {
     return new Promise((resolve, reject) => {
 
         const query = `
-           INSERT INTO Users 
+           INSERT INTO Users2 
             (userName, email, password) 
             VALUES 
             ('${userName}', '${email}', '${password}')
         `;
-        catalystApp.zcql().executeZCQLQuery(query)
+         catalystApp.zcql().executeZCQLQuery(query)
             .then(queryResponse => {
                 resolve(queryResponse);
             })
@@ -37,13 +36,6 @@ function addUser(catalystApp, {userName,email, password}) {
             });
     });
 }
-
-function sendErrorResponse(res) {
-    res.status(500).send({
-        error: "Internal server error occurred. Please try again later."
-    });
-}
-
 
 module.exports = {
     handleUserSignup
